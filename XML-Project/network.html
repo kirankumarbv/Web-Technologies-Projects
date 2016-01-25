@@ -1,0 +1,99 @@
+<html>
+<head>
+    <script type="text/javascript">
+    function XMLtoHTML(url) {
+        
+        // Empty URL validation
+        if  (url == undefined || url == "" || url == null || url.trim().length == 0) {
+            return alert("Enter non-empty URL");
+        }
+        
+        var x, i, xmlhttp, xmlDoc;
+        
+        if (window.XMLHttpRequest) {
+            // code for Chrome, Firefox, E7+, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {
+            // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        
+        xmlhttp.open("GET",url,false);
+        xmlhttp.send();
+        xmlDoc = xmlhttp.responseXML;
+        
+        // File not found validation
+        if (xmlhttp.status != 200) {
+            return alert("File not found");
+        }
+        
+        // Parsing error validation
+       if (xmlDoc.documentElement.nodeName == "parsererror") {
+           return alert("Invalid file : Error in XML file");
+        }
+        
+         x = xmlDoc.getElementsByTagName("Data");
+        // Generate HTML
+        var table_write="<html><head><style>table, th, td {border: 1px solid black;}</style><bo"+"dy><table><tr>";
+        for (i=0; i<x.length; i++){
+            table_write+="<th>" + printNodeValue(x[i]) + "</th>";
+        }
+        table_write+="</tr>";
+        x = xmlDoc.getElementsByTagName("Row");
+        
+        if ( x.length <= 1) {
+            return alert("Empty Network List");
+        }
+        for (i=0; i<x.length; i++) {
+            var networkName = x[i].getElementsByTagName("Network");
+            table_write+="<tr><td width='50px'>" + printNodeValue(networkName[0]) + "</td>";
+            var ownerName = x[i].getElementsByTagName("Owner");
+            table_write+="<td width='65px' align='left'>" + printNodeValue(ownerName[0]) + "</td>";
+            var y = x[i].getElementsByTagName("Feed");
+            table_write+="<td width='105px' align='left'><ul>";
+            for (var j=0; j<y.length; j++) {
+                emptyFeed = printNodeValue(y[j]);
+                if (emptyFeed != "") {
+                    table_write+="<li>" + printNodeValue(y[j]) + "</li>";
+                } else {
+                    table_write+="";
+                }
+            }
+            table_write+="</ul></td>";
+            var notesInfo = x[i].getElementsByTagName("Notes");
+            table_write+="<td width='300px'>" + printNodeValue(notesInfo[0]) + "</td>";
+            var homepage = x[i].getElementsByTagName("HomePage");
+            table_write+="<td><a href='" + printNodeValue(homepage[0]) + "'>" + printNodeValue(homepage[0]) + "</a></td>";
+            logo = x[i].getElementsByTagName("Logo");
+            table_write+="<td> <img src='" + printNodeValue(logo[0]) + "'></img></td>";
+        }
+        table_write+="</table></bo"+"dy><noscript></html>";
+        var Window = window.open("hw4", "_blank", "scrollbars=yes, width=1000, height=800");
+        Window.document.write(table_write);
+        Window.document.close();
+    }
+    function printNodeValue(node) {
+        if (node.childNodes.length < 1 || node.childNodes[0].nodeValue.trim().length == 0 ) {
+            nodeValue = "";
+        } else {
+            nodeValue = node.childNodes[0].nodeValue;
+        }
+        return nodeValue;
+    }
+    </script>
+</head>
+<title>
+    Network Information 
+</title>
+<body>
+    <center>
+        <h3> Enter URL for Company List XML File</h3>
+    <form name="myform" method="GET" onSubmit="return XMLtoHTML(document.getElementById('url').value)">
+    <input type="text" id="url" size="30"></input>
+    <br></br>
+    <input type="button" name="submit" value="Submit Query" onclick="XMLtoHTML(document.getElementById('url').value)"></input>
+    </form>
+</center>
+<noscript>
+</body>
+</html>

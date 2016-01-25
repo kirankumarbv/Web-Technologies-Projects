@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<Workbook>
+  <Table>
+   <Header>
+    <Data>Network</Data>
+    <Data>Owner</Data>
+    <Data>Feeds</Data>
+    <Data>Notes</Data>
+    <Data>HomePage</Data>
+    <Data>Logo</Data>
+   </Header>
+      <Row>
+            <Network></Network>
+            <Owner></Owner>
+            <Feeds>
+                <Feed></Feed>
+            </Feeds>
+            <Notes></Notes>
+            <HomePage></HomePage>
+            <Logo></Logo>
+        </Row>
+</Table>
+</Workbook>
